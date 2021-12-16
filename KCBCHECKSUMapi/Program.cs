@@ -79,13 +79,9 @@ namespace Test
 
                 var sender = SendChecksum(checksum, base64, serviceId, systemCode, conversationId, fileName);
 
-
-
                 // encrypt the data using gpg
 
                 PGPEncryptDecrypt pgp = new PGPEncryptDecrypt();
-
-                string passPhrase = "hello world!";
 
                 //full path to file to encrypt
                 string origFilePath = @"C:\Users\Admin2\Downloads\New folder\newbie.txt";

@@ -29,14 +29,16 @@ namespace Test
         static void Main(string[] args)
         {
 
-            string fileName = @"C:\Users\Administrator\Downloads\krcsconstitution.pdf";
+            string path = @"C:\BTL\94424.txt";
+            string fileName = Path.GetFileName(path);
             var fileStream = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.Read);
             var systemCode = "REDCROSS";
             var conversationId = "REDCROSS12";
             var serviceId = "REDCROSS";
 
 
-            var encryptedFile = @"C:\Users\Admin2\Downloads\New folder\newbie.txt.asc";
+            var encryptedFile = @"C:\Users\Admin2\Downloads\New folder\94424.txt.asc";
+
             string dataString = GetChecksumBuffered(fileStream);
             try
             {
@@ -78,24 +80,31 @@ namespace Test
                 string checksum = Encoding.Default.GetString(originalData);
 
                 var sender = SendChecksum(checksum, base64, serviceId, systemCode, conversationId, fileName);
-
                 // encrypt the data using gpg
 
                 PGPEncryptDecrypt pgp = new PGPEncryptDecrypt();
 
+                string passPhrase = "hello world!";
+
                 //full path to file to encrypt
-                string origFilePath = @"C:\Users\Admin2\Downloads\New folder\newbie.txt";
+                string origfilePath = @"C:\BTL\94424.txt";
+                string origFilePath = Path.GetFileName(origfilePath);
                 //folder to store encrypted file
                 string encryptedFilePath = @"C:\Users\Admin2\Downloads\New folder\";
                 //folder to store unencrypted file
                 string unencryptedFilePath = @"C:\Users\Admin2\Downloads\New folder\";
                 //path to public key file 
-                string publicKeyFile = @"C:\Users\Admin2\Downloads\New folder\dummy.pkr";
+                string publicKeyFile = @"C:\Users\Admin2\Downloads\New folder\REDCROSS.ASC";
+                //string publicKeyFile = Path.GetFileName(publicKeyFilepath);
                 //path to private key file (this file should be kept at client, AND in a secure place, far from prying eyes and tinkering hands)
-                string privateKeyFile = @"C:\Users\Admin2\Downloads\New folder\dummy.skr";
-
+                string privateKeyFile = @"C:\Users\Admin2\Downloads\New folder\REDCROSS.ASC";
+                //string privateKeyFile = Path.GetFileName(privateKeyFilepath);
                 pgp.Encrypt(origFilePath, publicKeyFile, encryptedFilePath);
                 // pgp.Decrypt(encryptedFilePath + "credentials.txt.asc", privateKeyFile, passPhrase, unencryptedFilePath);
+                string final_data = sendingFile(encryptedFile, systemCode);
+
+                string report = null;
+
 
                 // Verify the data and display the result to the console.
                 if (VerifySignedHash(originalData, signedData, Key))
@@ -106,6 +115,7 @@ namespace Test
                     //System.Console.WriteLine("Signed data: " + Encoding.Default.GetString(signedData));
                     //System.Console.WriteLine("Signed data: " + base64);
                     //System.Console.WriteLine("The data was verified.");
+
                     System.Console.ReadLine();
                 }
 
@@ -171,7 +181,7 @@ namespace Test
             }
         }
         //Sending the file
-        public static string sendingFile()
+        public static string sendingFile(string encryptedFile, string systemCode)
         {
             string token = Gettoken();
             token = "Bearer " + token;
@@ -313,7 +323,33 @@ namespace Test
 
             return fileNameQuery;
         }
-
+        public static void WriteLog(string text)
+        {
+            try
+            {
+                //set up a filestream
+                string strPath = @"C:\Logs\KCBREDCROSS";
+                string fileName = DateTime.Now.ToString("MMddyyyy") + "_logs.txt";
+                string filenamePath = strPath + '\\' + fileName;
+                Directory.CreateDirectory(strPath);
+                FileStream fs = new FileStream(filenamePath, FileMode.OpenOrCreate, FileAccess.Write);
+                //set up a streamwriter for adding text
+                StreamWriter sw = new StreamWriter(fs);
+                //find the end of the underlying filestream
+                sw.BaseStream.Seek(0, SeekOrigin.End);
+                //add the text
+                sw.WriteLine(DateTime.Now.ToString() + " : " + text);
+                //add the text to the underlying filestream
+                sw.Flush();
+                //close the writer
+                sw.Close();
+            }
+            catch (Exception ex)
+            {
+                //throw;
+                ex.Data.Clear();
+            }
+        }
     }
     public class PGPEncryptDecrypt
     {

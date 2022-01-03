@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Settings>	
+	<IsEncrypted>N</IsEncrypted>
+	<Password></Password>
+	<Username></Username>
+	<Domain></Domain>
+	<NavWebService>http://10.100.122.53:8072/service908/WS/STIMASACCO/Codeunit/PESALinkTransfer</NavWebService>
+	<ServiceTimerInterval>60000</ServiceTimerInterval>
+</Settings>

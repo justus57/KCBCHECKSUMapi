@@ -25,20 +25,15 @@ namespace Test
         public static object encryptedFile { get; private set; }
         public static object systemCode { get; private set; }
         public static string transactionDate { get; private set; }
-
         static void Main(string[] args)
         {
-
             string path = @"C:\BTL\94424.txt";
             string fileName = Path.GetFileName(path);
             var fileStream = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.Read);
             var systemCode = "REDCROSS";
             var conversationId = "REDCROSS12";
             var serviceId = "REDCROSS";
-
-
             var encryptedFile = @"C:\Users\Admin2\Downloads\New folder\94424.txt.asc";
-
             string dataString = GetChecksumBuffered(fileStream);
             try
             {
